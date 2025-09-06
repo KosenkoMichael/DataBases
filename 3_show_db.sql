@@ -16,22 +16,17 @@ LEFT JOIN subjects sub ON g.subject_id = sub.subject_id
 LEFT JOIN teachers t ON sub.teacher_id = t.teacher_id
 ORDER BY s.zach_number, sub.semester, sub.subject_name;
 
-
 -- Вывод всех предметов
 SELECT subject_name FROM subjects;
-
 
 -- Вывод количества студентов
 SELECT COUNT(*) as total_students FROM students;
 
-
 -- Вывод студентов, чья фамилия начинается на «Ива»
 SELECT * FROM students WHERE fio LIKE 'Ива%';
 
-
 -- Вывод студентов, родившихся позже указанной даты
 SELECT * FROM students WHERE birth_date > '2001-01-01' ORDER BY birth_date;
-
 
 -- Вывод студентов, получивших оценки 5 по указанному предмету
 SELECT fio 
@@ -41,7 +36,6 @@ WHERE zach_number IN (
     FROM grades 
     WHERE grade = 5 AND subject_id = 1
 );
-
 
 -- Вывод студентов, получивших оценки только 4 и 5 по всем предметам в указанном семестре, упорядочить по фамилии
 SELECT s.zach_number, s.fio
