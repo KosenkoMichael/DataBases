@@ -12,7 +12,7 @@ INSERT INTO subjects (subject_name, semester, teacher_id) VALUES
 ('Программирование', 2, 2);
 
 INSERT INTO grades (student_id, subject_id, grade) VALUES 
-(12345, 1, 5),
+(12345, 1, 2),
 (12345, 2, 4),
 (67890, 1, 4),
 (67890, 2, 5);
