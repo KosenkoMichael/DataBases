@@ -9,7 +9,10 @@ INSERT INTO models (model_title) VALUES
 INSERT INTO rental_points (point_title, lat, lon, notes) VALUES 
 ('Центральный парк', 55.755826, 37.617300, '{"work_hours": "09:00-22:00", "capacity": 50}'),
 ('Вокзальная площадь', 55.728953, 37.655497, '{"work_hours": "08:00-23:00", "capacity": 30}'),
-('Набережная реки', 55.747938, 37.621655, '{"work_hours": "10:00-20:00", "capacity": 20}');
+('Набережная реки', 55.747938, 37.621655, '{"work_hours": "10:00-20:00", "capacity": 20}'),
+('Отдалённая станция', 55.8, 61, '{"work_hours": "09:00-21:00", "capacity": 10}'),
+('Парк Гагарина', 55.700000, 37.600000, '{"work_hours": "08:00-22:00", "capacity": 40, "features": "Прокат электровелосипедов"}'),
+('Соседняя площадь', 90.000000, 180.000000, '{"work_hours": "09:00-21:00", "capacity": 25, "description": "район"}');
 
 INSERT INTO customers (passport, first_name, last_name, phone) VALUES 
 ('4501123456', 'Иван', 'Петров', '+79161234567'),
