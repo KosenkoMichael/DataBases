@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using MySqlConnector;
 
 public class BikeRentalContext : DbContext
 {
@@ -151,73 +152,179 @@ public class Program
 
         using var db = new BikeRentalContext(options);
 
-        var q1 = await db.Models
-            .Select(m => new { m.ModelTitle, Count = m.Bicycles.Count })
-            .ToListAsync();
+        //var q1 = await db.Models
+        //    .Select(m => new { m.ModelTitle, Count = m.Bicycles.Count })
+        //    .ToListAsync();
 
-        var q2 = await db.Rentals
-            .Where(r => r.Bicycle.Model.ModelTitle == "Bianchi Oltre")
-            .Select(r => new { r.PickPoint.PointId, r.PickPoint.PointTitle })
-            .Distinct()
-            .OrderBy(x => x.PointTitle)
-            .ToListAsync();
+        //var q2 = await db.Rentals
+        //    .Where(r => r.Bicycle.Model.ModelTitle == "Горный велосипед")
+        //    .Select(r => new { r.PickPoint.PointId, r.PickPoint.PointTitle })
+        //    .Distinct()
+        //    .OrderBy(x => x.PointTitle)
+        //    .ToListAsync();
 
-        var q3 = await db.Rentals
-            .Where(r => r.EndTime != null)
-            .GroupBy(r => r.Bicycle.Model.ModelTitle)
-            .Select(g => new
+        //var q3 = await db.Rentals
+        //    .Where(r => r.EndTime != null)
+        //    .GroupBy(r => r.Bicycle.Model.ModelTitle)
+        //    .Select(g => new
+        //    {
+        //        ModelTitle = g.Key,
+        //        Duration = g.Sum(r => EF.Functions.DateDiffHour(r.StartTime, r.EndTime!.Value))
+        //    })
+        //    .OrderBy(x => x.Duration)
+        //    .ToListAsync();
+
+        //var q4 = await db.RentalPoints
+        //    .Select(p => new { p.PointTitle, Count = p.PickRentals.Count })
+        //    .OrderBy(x => x.PointTitle)
+        //    .ToListAsync();
+
+        //var q5 = await db.Customers
+        //    .Select(c => new {
+        //        c.FirstName,
+        //        c.LastName,
+        //        Count = c.Rentals.Count
+        //    })
+        //    .Where(c => c.Count == db.Rentals
+        //        .GroupBy(r => r.CustomerId)
+        //        .Select(g => g.Count())
+        //        .Max())
+        //    .OrderBy(x => x.LastName)
+        //    .ThenBy(x => x.FirstName)
+        //    .ToListAsync();
+
+        //var q6 = await db.Customers
+        //    .Select(c => new
+        //    {
+        //        c.FirstName,
+        //        c.LastName,
+        //        Avg = c.Rentals
+        //            .Where(r => r.EndTime != null)
+        //            .Average(r => (double)EF.Functions.DateDiffHour(r.StartTime, r.EndTime!.Value))
+        //    })
+        //    .Where(x => x.Avg > 3)
+        //    .ToListAsync();
+
+        //Console.WriteLine("Query 1:\n");
+        //Console.WriteLine("Вывести информацию о количестве велосипедов каждой модели.\n" +
+        //    "В запросе вывести столбцы: название модели, количество велосипедов.\n");
+        //q1.ForEach(Console.WriteLine);
+
+        //Console.WriteLine("\nQuery 2:\n");
+        //Console.WriteLine("Вывести информацию обо всех точках выдачи (без повторений),\n" +
+        //    "откуда брали в аренду велосипеды модели \"Bianchi Oltre\", упорядочить по названию точки.\n" +
+        //    "В запросе вывести столбцы: идентификатор точки, название точки.\n");
+        //q2.ForEach(Console.WriteLine);
+
+        //Console.WriteLine("\nQuery 3:\n");
+        //Console.WriteLine("Вывести суммарное время аренды велосипедов каждой модели в часах,\n" +
+        //    "упорядочить по времени аренды. Не учитывать в запросе велосипеды,\n" +
+        //    "которые сейчас в аренде (не вернулись из аренды). В запросе вывести столбцы:\n" +
+        //    "название модели, суммарное время аренды.\n");
+        //q3.ForEach(Console.WriteLine);
+
+        //Console.WriteLine("\nQuery 4:\n");
+        //Console.WriteLine("Вывести информацию о точках выдачи и количестве арендованных велосипедов на точке.\n" +
+        //    "Если из точки выдачи не было арендовано ни одного велосипеда - в столбце вывести 0.\n" +
+        //    "В запросе вывести название точки и количество арендованных велосипедов.\n");
+        //q4.ForEach(Console.WriteLine);
+
+        //Console.WriteLine("\nQuery 5:\n");
+        //Console.WriteLine("Вывести информацию о клиентах, бравших велосипеды на прокат больше всего раз\n" +
+        //    "(т.е. вывести всех клиентов, количество аренд для которых было максимальным).\n" +
+        //    "В запросе вывести имя клиента, фамилию и количество арендованных велосипедов.\n");
+        //q5.ForEach(Console.WriteLine);
+
+        //Console.WriteLine("\nQuery 6:\n");
+        //Console.WriteLine("Вывести информацию о среднем времени аренды велосипедов (в часах)\n" +
+        //    "для каждого клиента. В запросе вывести клиентов, среднее время аренды которых больше трех часов.\n" +
+        //    "Не учитывать не закончившиеся аренды. В запросе вывести имя клиента, фамилию,\n" +
+        //    "среднее время аренды.\n");
+        //q6.ForEach(Console.WriteLine);
+
+        ////add
+        //var newCustomer = new Customer
+        //{
+        //    Passport = "4521122334",
+        //    FirstName = "Анна",
+        //    LastName = "Иванова",
+        //    Phone = "+79165554433"
+        //};
+
+        //db.Customers.Add(newCustomer);
+        //await db.SaveChangesAsync();
+
+        ////update
+        //var customerToUpdate = await db.Customers.FirstOrDefaultAsync(c => c.FirstName == "Иван" && c.LastName == "Петров");
+        //if (customerToUpdate != null)
+        //{
+        //    customerToUpdate.Phone = "+79161112233";
+        //    await db.SaveChangesAsync();
+        //}
+
+        ////delete
+        //var bicycleToDelete = await db.Bicycles.FirstOrDefaultAsync(b => b.SerialNumber == "MTB0052024");
+        //if (bicycleToDelete != null)
+        //{
+        //    var relatedRentals = await db.Rentals.Where(r => r.BicycleId == bicycleToDelete.BicycleId).ToListAsync();
+        //    if (relatedRentals.Any())
+        //    {
+        //        db.Rentals.RemoveRange(relatedRentals);
+        //        await db.SaveChangesAsync();
+        //    }
+        //    db.Bicycles.Remove(bicycleToDelete);
+        //    await db.SaveChangesAsync();
+        //}
+        await using var connection = db.Database.GetDbConnection() as MySqlConnection;
+        await connection!.OpenAsync();
+
+        var sql = @"
+                SELECT DISTINCT 
+                    rp.point_id,
+                    rp.point_title
+                FROM rental r
+                JOIN bicycles b ON r.bicycle_id = b.bicycle_id
+                JOIN models m ON b.model_id = m.model_id
+                JOIN rental_points rp ON r.pick_point_id = rp.point_id
+                WHERE m.model_title = @modelTitle
+                ORDER BY rp.point_title";
+
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("=== Точки выдачи для определенной модели ===");
+
+            var availableModels = await db.Models
+                .Select(m => m.ModelTitle)
+                .OrderBy(m => m)
+                .ToListAsync();
+
+            foreach (var model in availableModels)
             {
-                ModelTitle = g.Key,
-                Duration = g.Sum(r => EF.Functions.DateDiffHour(r.StartTime, r.EndTime!.Value))
-            })
-            .OrderBy(x => x.Duration)
-            .ToListAsync();
+                Console.WriteLine($"- {model}");
+            }
 
-        var q4 = await db.RentalPoints
-            .Select(p => new { p.PointTitle, Count = p.PickRentals.Count })
-            .OrderBy(x => x.PointTitle)
-            .ToListAsync();
+            Console.Write("Введите название модели: ");
+            string? modelTitle = Console.ReadLine();
 
-        var maxRentals = await db.Rentals
-            .GroupBy(r => r.CustomerId)
-            .Select(g => g.Count())
-            .MaxAsync();
+            if (string.IsNullOrWhiteSpace(modelTitle))
+                break;
 
-        var q5 = await db.Customers
-            .Where(c => c.Rentals.Count == maxRentals)
-            .Select(c => new { c.FirstName, c.LastName, Count = c.Rentals.Count })
-            .OrderBy(x => x.LastName)
-            .ThenBy(x => x.FirstName)
-            .ToListAsync();
+            await using var command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@modelTitle", modelTitle.Trim());
 
-        var q6 = await db.Customers
-            .Select(c => new
+            await using var reader = await command.ExecuteReaderAsync();
+
+            Console.WriteLine($"\nТочки выдачи для модели: \"{modelTitle}\"");
+            Console.WriteLine("ID\tНазвание");
+
+            while (await reader.ReadAsync())
             {
-                c.FirstName,
-                c.LastName,
-                Avg = c.Rentals
-                    .Where(r => r.EndTime != null)
-                    .Average(r => (double)EF.Functions.DateDiffHour(r.StartTime, r.EndTime!.Value))
-            })
-            .Where(x => x.Avg > 3)
-            .ToListAsync();
+                Console.WriteLine($"{reader.GetInt32(0)}\t{reader.GetString(1)}");
+            }
 
-        Console.WriteLine("Query 1:");
-        q1.ForEach(Console.WriteLine);
-
-        Console.WriteLine("\nQuery 2:");
-        q2.ForEach(Console.WriteLine);
-
-        Console.WriteLine("\nQuery 3:");
-        q3.ForEach(Console.WriteLine);
-
-        Console.WriteLine("\nQuery 4:");
-        q4.ForEach(Console.WriteLine);
-
-        Console.WriteLine("\nQuery 5:");
-        q5.ForEach(Console.WriteLine);
-
-        Console.WriteLine("\nQuery 6:");
-        q6.ForEach(Console.WriteLine);
+            Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+            Console.ReadKey();
+        }
     }
 }
